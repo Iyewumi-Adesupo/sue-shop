@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shop</title>
+</head>
+<body>
+    <h1>Products</h1>
+    <ul>
+        {% for product in products %}
+            <li>
+                {{ product.name }} - £{{ product.price }}
+                <form action="{% url 'buy' product.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Buy</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -52,16 +52,3 @@ class Order(models.Model):
             except Exception as e:
                 print(f"Refund failed: {e}")
         return False
-
-
-class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
-    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.PositiveIntegerField(default=1)
-
-    def __str__(self):
-        return f"{self.quantity} × {self.product.name}"
-
-    def get_total_price(self):
-        return self.unit_price * self.quantity

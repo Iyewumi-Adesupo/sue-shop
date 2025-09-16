@@ -1,1 +1,8 @@
 # sue-shop
+Docker-compose to run a PostgreSQL database (db) → stores all your e-commerce app data (products, users, orders, etc.)
+Run your Django web app (web) → serves the e-commerce site, talks to the database, and uses Stripe for payments.
+Docker-compose connect them together automatically → the app can reach the database without extra setup.
+docker-compose keep the database data safe with a volume (pgdata) so it doesn’t get wiped when containersare stopped.
+docker-compose expose ports so:
+Visit the app at http://localhost:8000.
+Also connect to the database on localhost:5432 if needed.

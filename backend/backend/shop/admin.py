@@ -32,9 +32,9 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 class MyAdminSite(admin.AdminSite):
-    site_header = "Sue_Shop Admin"
-    site_title = "Sue_Shop Dashboard"
-    index_title = "Welcome to SueShop"
+    site_header = "Sue-Shop Admin"
+    site_title = "Sue-Shop Dashboard"
+    index_title = "Welcome to Sue-Shop"
 
     def get_urls(self):
         urls = super().get_urls()
@@ -60,6 +60,6 @@ class MyAdminSite(admin.AdminSite):
 
 
 # Register models with custom admin site
-admin_site = MyAdminSite(name="sue_shop_admin")
+admin_site = MyAdminSite(name="sue-shop_admin")
 admin_site.register(Product)
 admin_site.register(Order, OrderAdmin)
