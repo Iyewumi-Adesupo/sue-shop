@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:15
+    container_name: sue-shop-db
+    env_file:                # load DB vars from .env
+      - .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    container_name: sue-shop-web
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:                # load Django + Stripe vars from .env
+      - .env
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
