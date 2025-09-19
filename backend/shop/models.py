@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.conf import settings
 import stripe
+from django.utils.text import slugify
 
 User = get_user_model()
 
@@ -12,10 +13,15 @@ class Product(models.Model):
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    stripe_price_id = models.CharField(max_length=255, blank=True, null=True)  # link to Stripe price (optional)
+    stripe_price_id = models.CharField(max_length=255, blank=True, null=True)  # Stripe integration
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=timezone.now)
 
+    def save(self, *args, **kwargs):
+        if not self.slug:  # only generate if empty
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+        
     def __str__(self):
         return self.name
 
@@ -36,7 +42,7 @@ class Order(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"Order #{self.id}"
+        return f"Order #{self.id} ({self.user.username if self.user else 'Guest'}) - {self.status}"
 
     def refund(self):
         """Trigger a refund in Stripe"""
@@ -61,7 +67,7 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return f"{self.quantity} × {self.product.name}"
+        return f"{self.quantity} × {self.product.name} (Order #{self.order.id})"
 
     def get_total_price(self):
         return self.unit_price * self.quantity

@@ -1,0 +1,26 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+  <h1>📊 SueShop Dashboard</h1>
+  <ul>
+    <li><strong>Total Products:</strong> {{ total_products }}</li>
+    <li><strong>Total Orders:</strong> {{ total_orders }}</li>
+    <li><strong>Total Revenue:</strong> ${{ total_revenue }}</li>
+  </ul>
+
+  <h2>Recent Orders</h2>
+  <table>
+    <tr>
+      <th>ID</th><th>User</th><th>Status</th><th>Total</th><th>Date</th>
+    </tr>
+    {% for order in recent_orders %}
+    <tr>
+      <td>{{ order.id }}</td>
+      <td>{{ order.user }}</td>
+      <td>{{ order.status }}</td>
+      <td>${{ order.total }}</td>
+      <td>{{ order.created_at }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

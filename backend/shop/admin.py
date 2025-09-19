@@ -1,36 +1,40 @@
 from django.contrib import admin, messages
-from django.urls import path
-from django.template.response import TemplateResponse
 from django.db.models import Sum
+from django.template.response import TemplateResponse
+from django.urls import path
 from .models import Product, Order, OrderItem
 
 
-class OrderItemInline(admin.TabularInline):
-    model = OrderItem
-    readonly_fields = ("product", "unit_price", "quantity")
-    extra = 0
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "price", "active")
+    search_fields = ("name", "slug")
 
 
+@admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "total", "status", "created_at")
-    inlines = [OrderItemInline]
+    list_filter = ("status", "created_at")
     actions = ["refund_orders"]
 
     def refund_orders(self, request, queryset):
-        """Admin action to refund selected orders"""
         refunded = 0
         for order in queryset:
-            if order.status == "paid" and order.refund():
+            if order.status == "paid":
+                order.status = "refunded"
+                order.save()
                 refunded += 1
-        self.message_user(
-            request,
-            f"Refunded {refunded} orders.",
-            level=messages.SUCCESS
-        )
+        self.message_user(request, f"Refunded {refunded} orders.", level=messages.SUCCESS)
 
     refund_orders.short_description = "Refund selected paid orders"
 
 
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ("id", "order", "product", "unit_price", "quantity")
+
+
+# ---- Custom Admin Site ----
 class MyAdminSite(admin.AdminSite):
     site_header = "Sue_Shop Admin"
     site_title = "Sue_Shop Dashboard"
@@ -39,7 +43,7 @@ class MyAdminSite(admin.AdminSite):
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
-            path("dashboard/", self.admin_view(self.dashboard_view))
+            path("dashboard/", self.admin_view(self.dashboard_view)),
         ]
         return custom_urls + urls
 
@@ -59,7 +63,10 @@ class MyAdminSite(admin.AdminSite):
         return TemplateResponse(request, "admin/dashboard.html", context)
 
 
-# Register models with custom admin site
+# Use custom admin site
 admin_site = MyAdminSite(name="sue_shop_admin")
-admin_site.register(Product)
+
+# Register models with custom admin site
+admin_site.register(Product, ProductAdmin)
 admin_site.register(Order, OrderAdmin)
+admin_site.register(OrderItem, OrderItemAdmin)
