@@ -1,0 +1,81 @@
+/* src/styles/Navbar.css */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: black;
+  color: white;
+  padding: 1rem 2rem;
+  font-family: sans-serif;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.search {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: none;
+  width: 40%;
+}
+
+.icons a {
+  color: white;
+  margin-left: 1rem;
+  font-size: 1.2rem;
+}
+
+/* ✅ User menu styles */
+.user-menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 2.5rem;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  z-index: 999;
+  width: 150px;
+}
+
+.user-dropdown p {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.user-dropdown p:hover {
+  background-color: #f0f0f0;
+}
+
+/* ✅ Nav links styling */
+.navbar .icons span,
+.navbar .auth-links a,
+.navbar .nav-links a {
+  color: white;
+  text-decoration: none;
+  margin-left: 1rem;
+  font-weight: 500;
+}
+
+.navbar .auth-links span {
+  cursor: pointer;
+}
+
+.navbar .auth-links span:hover,
+.navbar .auth-links a:hover,
+.navbar .nav-links a:hover {
+  color: #f0c040; /* Optional: hover color */
+}

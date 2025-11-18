@@ -2,13 +2,19 @@
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
 
+
 // ------------------- PRODUCTS -------------------
 export async function fetchProducts() {
-  const response = await fetch(`${API_BASE}/products/`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch products: ${response.status}`);
+  try {
+    const response = await fetch(`${API_BASE}/products/`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (err) {
+    console.error("Fetch failed:", err);
+    throw err;
   }
-  return response.json();
 }
 
 // ------------------- TOKEN STORAGE -------------------
@@ -28,6 +34,15 @@ export function getRefreshToken() {
 export function clearTokens() {
   localStorage.removeItem("access");
   localStorage.removeItem("refresh");
+}
+
+// ✅ NEW: Individual token helpers (for manual control or future use)
+export function setAccessToken(token) {
+  localStorage.setItem("access", token);
+}
+
+export function setRefreshToken(token) {
+  localStorage.setItem("refresh", token);
 }
 
 // ------------------- AUTH -------------------

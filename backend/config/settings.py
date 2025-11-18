@@ -1,7 +1,7 @@
 import os
 import environ
 from pathlib import Path
-
+from decouple import config
 from datetime import timedelta
 
 SIMPLE_JWT = {
@@ -24,36 +24,36 @@ DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
+from decouple import config
+
+from decouple import config
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': env('POSTGRES_DB'),
         'USER': env('POSTGRES_USER'),
         'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST': env('POSTGRES_HOST'),  # important: must match service name "db"
+        'HOST': env('POSTGRES_HOST'),
         'PORT': env('POSTGRES_PORT'),
     }
 }
 
 INSTALLED_APPS = [
-    # Default Django apps (must include these)
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',   # 👈 this was missing
+    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'corsheaders',  # for handling CORS
     'rest_framework',
-    'rest_framework_simplejwt',
-
-    # Your custom app
-    'shop',   # or 'SueShop' depending on the exact folder name
+    'corsheaders',             # ✅ CORS
+    'shop',                    # ✅ your app
+    'django_extensions',       # ✅ added for runscript
 ]
 
 # --- CORS settings from environment ---
-CORS_ALLOW_ALL_ORIGINS = env.bool("CORS_ALLOW_ALL_ORIGINS", default=True)
+CORS_ALLOW_ALL_ORIGINS = env.bool("CORS_ALLOW_ALL_ORIGINS", default=False)
 
 CORS_ALLOWED_ORIGINS = env.list(
     "CORS_ALLOWED_ORIGINS",
@@ -70,11 +70,12 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     )
 }
+# STRIPES SETTINGS
 
-# STRIPE
-STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
-STRIPE_PRICE_ID = os.environ.get("STRIPE_PRICE_ID", "")
-STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET")
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = os.getenv("VITE_STRIPE_PUBLIC_KEY")  # Optional
+STRIPE_WEBHOOK_SECRET = config("STRIPE_WEBHOOK_SECRET")
+
 
 # TEMPLATES
 TEMPLATES = [
@@ -98,10 +99,10 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"  # where collectstatic will put files
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",   # 👈 must be at the top
     "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",   # 👈 must be at the top
     "django.middleware.common.CommonMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -126,3 +127,7 @@ else:  # development
     CSRF_COOKIE_SECURE = False
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+import os
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"  # ✅ Best practice (uses pathlib correctly)

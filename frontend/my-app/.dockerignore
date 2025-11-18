@@ -1,0 +1,9 @@
+.venv
+node_modules
+.git
+*.log
+.DS_Store
+npm-debug.log
+.env
+dist
+.env*

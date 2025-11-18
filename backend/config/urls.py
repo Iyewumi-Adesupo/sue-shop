@@ -1,12 +1,16 @@
 # config/urls.py
+
 from django.contrib import admin
 from django.urls import path, include
-from shop.admin import admin_site   # if you’re using a custom admin site
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from shop.admin import admin_site  # Custom admin site
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
-    path("admin/", admin_site.urls),            # custom admin, or use admin.site.urls
-    path("api/", include("shop.urls")),         # your app routes
-    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("admin/", admin_site.urls),      # Admin panel (custom or default)
+    path("api/", include("shop.urls")),   # All app-specific routes live here
 ]
+
+# Serve media files in development mode
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

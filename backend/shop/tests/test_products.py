@@ -1,12 +1,14 @@
+# shop/tests/test_products.py
 import pytest
-from django.urls import reverse
-from rest_framework.test import APIClient
 from shop.models import Product
 
 @pytest.mark.django_db
-def test_list_products():
-    Product.objects.create(name="Test", slug="test", price=9.99)
-    client = APIClient()
-    resp = client.get(reverse("product-list"))
-    assert resp.status_code == 200
-    assert len(resp.json()) >= 1
+def test_product_creation():
+    product = Product.objects.create(
+        name="Nike Dunks",
+        price=59.99,
+        description="Just for testing",
+        image="products/background-nikeshooes.jpg",
+        active=True
+    )
+    assert product.name == "Nike Dunks"

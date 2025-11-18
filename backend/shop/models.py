@@ -16,6 +16,7 @@ class Product(models.Model):
     stripe_price_id = models.CharField(max_length=255, blank=True, null=True)  # Stripe integration
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=timezone.now)
+    image = models.ImageField(upload_to='products_images/', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:  # only generate if empty

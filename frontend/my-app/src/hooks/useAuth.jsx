@@ -1,35 +1,40 @@
-// src/hooks/useAuth.js
-import { useEffect, useState } from "react";
-import { getAccessToken, getRefreshToken, refreshToken, clearTokens } from "../api";
+// src/hooks/useAuth.jsx
 
-export function useAuth() {
-  const [token, setToken] = useState(getAccessToken());
-  const [isAuthenticated, setIsAuthenticated] = useState(!!token);
+import { useContext } from "react";
+import { AuthContext } from "../components/AuthContext";
 
-  // Try to refresh token on mount if access is missing/expired
-  useEffect(() => {
-    async function checkToken() {
-      if (!getAccessToken() && getRefreshToken()) {
-        try {
-          const newAccess = await refreshToken();
-          setToken(newAccess);
-          setIsAuthenticated(true);
-        } catch (err) {
-          console.error("Token refresh failed:", err);
-          clearTokens();
-          setIsAuthenticated(false);
-        }
-      }
-    }
-    checkToken();
-  }, []);
-
-  // Logout function
-  function logout() {
-    clearTokens();
-    setToken(null);
-    setIsAuthenticated(false);
-  }
-
-  return { token, isAuthenticated, logout };
+export default function useAuth() {
+  return useContext(AuthContext);
 }
+
+// useEffect(() => {
+//   async function checkToken() {
+//     if (getAccessToken()) {
+//       setIsAuthenticated(true);
+//     } else if (getRefreshToken()) {
+//       try {
+//         const newAccess = await refreshToken();
+//         setToken(newAccess);
+//         setIsAuthenticated(true);
+//       } catch (err) {
+//         console.error("Token refresh failed:", err);
+//         clearTokens();
+//         setIsAuthenticated(false);
+//       }
+//     } else {
+//       setIsAuthenticated(false); // 🔑 force false if no tokens at all
+//     }
+//   }
+
+//   checkToken();
+
+//   // ✅ Listen for login success
+//   const handler = () => {
+//     const newToken = getAccessToken();
+//     setToken(newToken);
+//     setIsAuthenticated(!!newToken);
+//   };
+
+//   window.addEventListener("loginSuccess", handler);
+//   return () => window.removeEventListener("loginSuccess", handler);
+// }, []);

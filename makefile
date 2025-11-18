@@ -70,8 +70,10 @@ reseed-products:
 	$(COMPOSE) $(COMPOSE_DEV) exec backend python manage.py loaddata shop/fixtures/products.json
 
 frontend-dev:
-	docker build -t $(PROJECT)-frontend-dev -f $(FRONTEND_DIR)/Dockerfile $(FRONTEND_DIR)
-	docker run -it -p 5173:5173 -v $(PWD)/$(FRONTEND_DIR):/app $(PROJECT)-frontend-dev npm run dev -- --host 0.0.0.0
+	docker build -t sue-shop-frontend-dev -f frontend/my-app/Dockerfile frontend/my-app
+	docker run -it -p 5173:5173 \
+		-v $(PWD)/frontend/my-app:/app \
+		sue-shop-frontend-dev
 
 frontend-build:
 	docker build -t $(PROJECT)-frontend -f $(FRONTEND_DIR)/Dockerfile $(FRONTEND_DIR)
@@ -111,6 +113,9 @@ db-restore:
 		echo "❌ No backup file found at backups/db.sql"; \
 	fi
 
+makemigrations:
+	docker-compose exec backend python manage.py makemigrations
+	
 migrate:
 	$(COMPOSE) exec backend python manage.py migrate
 
@@ -146,6 +151,10 @@ frontend-clean-start:
 	docker build -t $(PROJECT)-frontend-dev -f $(FRONTEND_DIR)/Dockerfile $(FRONTEND_DIR)
 	docker run -it -p 5173:5173 -v $(PWD)/$(FRONTEND_DIR):/app $(PROJECT)-frontend-dev npm run dev -- --host 0.0.0.0
 
+# Install Toastify in frontend project
+frontend-toastify:
+	cd $(FRONTEND_DIR) && npm install react-toastify
+
 # Save a new access token (login)
 login:
 	@read -p "Username: " USER; \
@@ -170,3 +179,12 @@ refresh-token:
 get-orders:
 	@TOKEN=$$(cat .token); \
 	curl -s -H "Authorization: Bearer $$TOKEN" http://localhost:8000/api/orders/ | jq
+
+# ----------------------------------------------------------------
+# Full environment reset and rebuild (use when major changes done)
+# ----------------------------------------------------------------
+up:
+	@echo "🧹 Cleaning up old containers, volumes, and orphans..."
+	docker-compose down --remove-orphans --volumes
+	@echo "🚀 Rebuilding and starting fresh environment..."
+	docker-compose up --build

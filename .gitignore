@@ -26,3 +26,39 @@ venv/
 
 # VS Code
 .vscode/
+
+/media/
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
+crash.log
+# Python/Django
+__pycache__/
+*.pyc
+*.sqlite3
+.env
+db.sqlite3
+media/
+staticfiles/
+
+# Node/React/Vite
+node_modules/
+dist/
+.vite/
+.env.local
+.env.production
+frontend/.DS_Store
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+terraform.tfvars
+
+# Docker
+*.log
+*.pid
+
+# macOS
+.DS_Store
