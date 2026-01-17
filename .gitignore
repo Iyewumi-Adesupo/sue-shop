@@ -62,3 +62,8 @@ terraform.tfvars
 
 # macOS
 .DS_Store
+
+*.tfvars
+*.tfvars.json
+.env
+.env.prod
