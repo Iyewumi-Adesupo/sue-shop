@@ -1,38 +1,12 @@
-# Creating EC2 instance for webserver
-resource "aws_instance" "sueshop-webserver" {
-  ami           = var.ami_id
-  instance_type = var.instance_type
-  subnet_id     = var.subnet_id
-
-  associate_public_ip_address = true
-  key_name                    = var.key_name
-
-  vpc_security_group_ids = var.security_group_ids
-
-  user_data = var.user_data
-
-  tags = {
-    Name        = "sueshop-webserver"
-    Environment = var.environment
-  }
-}
-
-#Creating an EC2 keypair
-resource "aws_key_pair" "sueshop_keypair" {
-  key_name   = var.key_name
-  public_key = file(var.public_keypair_path)
-
-  tags = {
-    Name = var.sueshop_keypair
-  }
-}
-
 # Creating Launch template for webserver
 resource "aws_launch_template" "sueshop-lt" {
   name_prefix   = "sueshop-web"
   image_id      = var.ami_id
   instance_type = var.instance_type
-  key_name      = var.key_name
+
+  iam_instance_profile {
+  name = var.iam_instance_profile_name
+}
 
   vpc_security_group_ids = var.security_group_ids
 
@@ -41,8 +15,9 @@ resource "aws_launch_template" "sueshop-lt" {
   tag_specifications {
     resource_type = "instance"
     tags = {
-      Name        = "sueshop-lt"
+      Name        = "sueshop-web"
       Environment = var.environment
+      SSMAccess = "true"
     }
   }
 }

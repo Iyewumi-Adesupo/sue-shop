@@ -2,10 +2,6 @@ variable "ami_id" {}
 
 variable "instance_type" {}
 
-variable "sueshop_keypair_name" {}
-
-variable "public_keypair_path" {}
-
 variable "subnet_id" {}
 
 variable "private_subnet_ids" {}
