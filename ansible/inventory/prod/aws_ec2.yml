@@ -1,0 +1,20 @@
+plugin: amazon.aws.aws_ec2
+
+regions:
+  - eu-west-2
+
+filters:
+  tag:Environment: prod
+  tag:SSMAccess: "true"
+
+keyed_groups:
+  - key: tags['Name']
+    prefix: name
+  - key: tags['aws:autoscaling:groupName']
+    prefix: asg
+
+hostnames:
+  - instance-id
+
+compose:
+  ansible_host: instance_id

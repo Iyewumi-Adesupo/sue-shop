@@ -1,0 +1,19 @@
+---
+- name: Create app directory
+  file:
+    path: /opt/sue-shop
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+
+- name: Copy docker-compose file
+  copy:
+    src: ../../../../docker-compose.prod.yml
+    dest: /opt/sue-shop/docker-compose.yml
+    owner: ubuntu
+    group: ubuntu
+
+- name: Start Sue-Shop containers
+  community.docker.docker_compose:
+    project_src: /opt/sue-shop
+    state: present

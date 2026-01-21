@@ -1,0 +1,22 @@
+# Environment
+environment: prod
+app_name: sue-shop
+
+# OS
+timezone: Europe/London
+
+# Docker
+docker_packages:
+  - docker.io
+  - docker-compose-plugin
+
+# App
+backend_port: 8000
+frontend_port: 3000
+
+# Nginx
+nginx_listen_port: 80
+nginx_server_name: _
+
+ansible_connection: amazon.aws.aws_ssm
+ansible_aws_ssm_region: eu-west-2
