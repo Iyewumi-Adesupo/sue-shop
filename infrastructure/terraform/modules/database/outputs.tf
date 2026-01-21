@@ -1,3 +1,3 @@
 output "db_endpoint" {
-  value = aws_db_instance.sueshop.endpoint
+  value = aws_db_instance.sueshopdb.endpoint
 }

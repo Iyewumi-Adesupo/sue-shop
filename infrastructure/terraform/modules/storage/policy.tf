@@ -9,10 +9,10 @@ resource "aws_s3_bucket_policy" "cloudfront_only" {
         Service = "cloudfront.amazonaws.com"
       }
       Action   = "s3:GetObject"
-      Resource = "${aws_s3_bucket.sueshop.arn}/*"
+      Resource = "${aws_s3_bucket.sueshop_s3_bkt.arn}/*"
       Condition = {
         StringEquals = {
-          "AWS:SourceArn" = aws_cloudfront_distribution.this.arn
+          "AWS:SourceArn" = aws_cloudfront_distribution.cldfrnt-dist.arn
         }
       }
     }]

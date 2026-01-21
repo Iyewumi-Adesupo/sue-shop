@@ -4,7 +4,7 @@ resource "aws_vpc" "vpc" {
   instance_tenancy = "default"
 
   tags = {
-    Name = var.sueshop_vpc
+    Name = var.vpc_id
   }
 }
 
@@ -30,7 +30,7 @@ resource "aws_subnet" "public-subnet-2" {
 }
 
 #create 2 private subnet 
-rresource "aws_subnet" "private-subnet-1" {
+resource "aws_subnet" "private-subnet-1" {
   vpc_id            = aws_vpc.vpc.id
   availability_zone = var.AZ1
   cidr_block        = var.private_subnet_1_cidr
@@ -131,7 +131,7 @@ resource "aws_lb" "sueshop-alb" {
   internal           = false
 
   subnets         = var.public_subnet_ids
-  security_groups = var.alb_security_group_ids
+  security_groups = [aws_security_group.alb_sg.id]
 }
 
 # creating target group 
@@ -203,7 +203,7 @@ resource "aws_acm_certificate_validation" "sueshop_acm_cert" {
     for record in aws_route53_record.acm_validation :
     record.fqdn
   ]
-} 
+}
 
 # creating Route53
 resource "aws_route53_record" "sueshop_route53" {
@@ -218,3 +218,36 @@ resource "aws_route53_record" "sueshop_route53" {
   }
 }
 
+# Security Groups for load balancer
+resource "aws_security_group" "alb_sg" {
+  name        = "sueshop-alb-sg"
+  description = "Security group for SueShop ALB"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "sueshop-alb-sg"
+  }
+}

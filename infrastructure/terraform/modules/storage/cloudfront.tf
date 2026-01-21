@@ -9,11 +9,11 @@ resource "aws_cloudfront_distribution" "cldfrnt-dist" {
   enabled = true
 
   web_acl_id = aws_wafv2_web_acl.cloudfront.arn
-  
+
   origin {
-    domain_name              = aws_s3_bucket.sueshop.bucket_regional_domain_name
+    domain_name              = aws_s3_bucket.sueshop_s3_bkt.bucket_regional_domain_name
     origin_id                = "sueshop-s3-origin"
-    origin_access_control_id = aws_cloudfront_origin_access_control.this.id
+    origin_access_control_id = aws_cloudfront_origin_access_control.cldfnt-access.id
   }
 
   default_cache_behavior {

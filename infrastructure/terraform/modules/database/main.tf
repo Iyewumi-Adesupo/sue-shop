@@ -17,7 +17,6 @@ locals {
   db_creds = jsondecode(data.aws_secretsmanager_secret_version.db_credentials.secret_string)
 }
 
-# Creating RDS instance
 resource "aws_db_instance" "sueshopdb" {
   identifier     = "sueshop-db"
   engine         = "postgres"
@@ -27,9 +26,9 @@ resource "aws_db_instance" "sueshopdb" {
   allocated_storage     = 20
   max_allocated_storage = 100
 
-  db_name  = var.db_name
-  username = local.db_creds.username
-  password = local.db_creds.password
+  db_name  = local.db_creds.database
+  username = local.db_creds.db_username
+  password = local.db_creds.db_password
 
   db_subnet_group_name   = aws_db_subnet_group.sueshop.name
   vpc_security_group_ids = [var.db_security_group_id]

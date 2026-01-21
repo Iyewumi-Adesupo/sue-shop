@@ -4,18 +4,24 @@ set -eux
 # Update system
 apt-get update -y
 
-# Ensure Python is installed (Ansible requirement)
-apt-get install -y python3 python3-pip
+# Install Python & dependencies
+apt-get install -y python3 python3-pip curl unzip git
 
-# Install required packages
-apt-get install -y curl unzip
-
-# Enable & start SSM Agent (Ubuntu usually has it preinstalled)
+# Ensure SSM Agent is running
 systemctl enable amazon-ssm-agent
 systemctl start amazon-ssm-agent
 
-# (Optional) Install Ansible for local execution/debug
-pip3 install ansible
+# Install Ansible
+pip3 install ansible amazon.aws boto3 botocore
 
-# Mark instance as ready
-echo "ANSIBLE_READY=true" > /etc/ansible_ready
+# Clone infrastructure repo (adjust repo URL)
+mkdir -p /opt/ansible
+cd /opt/ansible
+git clone https://github.com/Iyewumi-Adesupo/sue-shop.git .
+
+# Run Ansible locally using SSM-safe connection
+cd ansible
+ansible-playbook playbooks/site.yml
+
+# Mark instance as configured
+touch /etc/ansible_bootstrap_complete

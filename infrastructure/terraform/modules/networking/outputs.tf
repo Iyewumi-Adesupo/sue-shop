@@ -13,11 +13,6 @@ output "alb_zone_id" {
   value       = aws_lb.sueshop-alb.zone_id
 }
 
-output "target_group_arn" {
-  description = "ARN of the ALB target group"
-  value       = aws_lb_target_group.sueshop-tg.arn
-}
-
 output "acm_certificate_arn" {
   description = "ARN of the ACM certificate used by the ALB"
   value       = aws_acm_certificate.sueshop_acm.arn
@@ -41,4 +36,8 @@ output "private_subnet_ids" {
 
 output "target_group_arn" {
   value = aws_lb_target_group.sueshop-tg.arn
+}
+
+output "alb_security_group_id" {
+  value = aws_security_group.alb_sg.id
 }

@@ -5,8 +5,8 @@ resource "aws_launch_template" "sueshop-lt" {
   instance_type = var.instance_type
 
   iam_instance_profile {
-  name = var.iam_instance_profile_name
-}
+    name = var.iam_instance_profile_name
+  }
 
   vpc_security_group_ids = var.security_group_ids
 
@@ -17,20 +17,20 @@ resource "aws_launch_template" "sueshop-lt" {
     tags = {
       Name        = "sueshop-web"
       Environment = var.environment
-      SSMAccess = "true"
+      SSMAccess   = "true"
     }
   }
 }
 
 # Creating ASG for instance
 resource "aws_autoscaling_group" "sueshop-asg" {
-  name                = "sue-shop-asg"
-  min_size            = 1
-  max_size            = 3
-  desired_capacity    = 2
+  name             = "sue-shop-asg"
+  min_size         = 1
+  max_size         = 3
+  desired_capacity = 2
 
   vpc_zone_identifier = var.private_subnet_ids
-  target_group_arns  = var.target_group_arns
+  target_group_arns   = var.target_group_arns
 
   launch_template {
     id      = aws_launch_template.sueshop-lt.id

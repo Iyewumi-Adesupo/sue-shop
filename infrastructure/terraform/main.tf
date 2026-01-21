@@ -1,13 +1,13 @@
 module "compute" {
   source = "./modules/compute"
 
-  ami_id             = var.ami_id
-  instance_type      = var.instance_type
-  security_group_ids = [module.security.ec2_sg_id]
-  environment        = var.environment
-  private_subnet_ids  = module.networking.private_subnet_ids
+  ami_id                    = var.ami_id
+  instance_type             = var.instance_type
+  security_group_ids        = [module.security.ec2_sg_id]
+  environment               = var.environment
+  private_subnet_ids        = module.networking.private_subnet_ids
   iam_instance_profile_name = module.security.ec2_instance_profile_name
-  target_group_arns = [module.networking.target_group_arn]
+  target_group_arns         = [module.networking.target_group_arn]
 }
 
 module "networking" {
@@ -42,18 +42,14 @@ module "networking" {
   sueshop_ngw        = var.sueshop_ngw
   sueshop_public_rt  = var.sueshop_public_rt
   sueshop_private_rt = var.sueshop_private_rt
-
-  # ALB
-  alb_security_group_ids = [module.security.alb_security_group_id]
 }
 
 module "security" {
   source = "./modules/security"
 
-  vpc_id        = module.networking.vpc_id
-  s3_bucket_arn = module.storage.bucket_arn
+  vpc_id                = module.networking.vpc_id
+  ec2_security_group_id = module.networking.ec2_security_group_id
 
-  # Database identifiers (NOT secrets)
   db_name     = var.db_name
   db_username = var.db_username
 }
@@ -64,13 +60,18 @@ module "database" {
   private_subnet_ids   = module.networking.private_subnet_ids
   db_security_group_id = module.security.rds_security_group_id
 
-  db_name     = var.db_name
-  db_username = var.db_username
+  db_name       = var.db_name
   db_secret_arn = module.security.db_secret_arn
 }
 
 module "storage" {
-  source      = "./modules/storage"
+  source = "./modules/storage"
+
+  providers = {
+    aws           = aws
+    aws.us_east_1 = aws.us_east_1
+  }
+
   bucket_name = "sueshop-assets-prod"
   environment = var.environment
 }

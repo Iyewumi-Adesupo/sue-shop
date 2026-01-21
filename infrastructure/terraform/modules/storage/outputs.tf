@@ -1,13 +1,13 @@
 output "bucket_name" {
-  value = aws_s3_bucket.sueshop-s3.bucket
+  value = aws_s3_bucket.sueshop_s3_bkt.bucket
 }
 
 output "bucket_arn" {
-  value = aws_s3_bucket.sueshop.arn
+  value = aws_s3_bucket.sueshop_s3_bkt.arn
 }
 
 output "cloudfront_domain_name" {
-  value = aws_cloudfront_distribution.this.domain_name
+  value = aws_cloudfront_distribution.cldfrnt-dist.domain_name
 }
 
 output "waf_arn" {

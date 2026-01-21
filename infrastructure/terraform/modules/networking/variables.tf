@@ -1,9 +1,7 @@
 variable "domain_name" {}
 variable "hosted_zone_id" {}
 
-variable "alb_security_group_ids" {}
-
-variable "sueshop_vpc" {}
+variable "vpc_id" {}
 
 variable "vpc_cidr" {}
 

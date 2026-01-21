@@ -1,8 +1,8 @@
 resource "aws_s3_bucket_lifecycle_configuration" "s3bkt-lfcycle-config" {
-  bucket = aws_s3_bucket.sueshop.id
+  bucket = aws_s3_bucket.sueshop_s3_bkt.id
 
   rule {
-    id     = "expire-old-objects"
+    id     = "log-retention"
     status = "Enabled"
 
     expiration {
