@@ -1,69 +1,62 @@
+# ----------------------------
 # Python
+# ----------------------------
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 *.sqlite3
 
-# Django stuff
-/media/
-staticfiles/
-
-# Environment variables
-.env
-
 # Virtual environments
 venv/
-.envrc
 *.venv
+.envrc
 
+# ----------------------------
+# Django
+# ----------------------------
+media/
+staticfiles/
+db.sqlite3
+
+# ----------------------------
+# Environment variables
+# ----------------------------
+.env
+.env.*
+!.env.example
+
+# ----------------------------
+# Node / React / Vite
+# ----------------------------
+node_modules/
+dist/
+.vite/
+
+# ----------------------------
 # Docker
+# ----------------------------
 *.log
 *.pid
 *.sock
 *.db
 *.tar
 
-# VS Code
-.vscode/
-
-/media/
-.terraform/
-terraform.tfstate
-terraform.tfstate.backup
-.terraform.lock.hcl
-crash.log
-# Python/Django
-__pycache__/
-*.pyc
-*.sqlite3
-.env
-db.sqlite3
-media/
-staticfiles/
-
-# Node/React/Vite
-node_modules/
-dist/
-.vite/
-.env.local
-.env.production
-frontend/.DS_Store
-
+# ----------------------------
 # Terraform
+# ----------------------------
 *.tfstate
 *.tfstate.*
 .terraform/
+.terraform.lock.hcl
 terraform.tfvars
-
-# Docker
-*.log
-*.pid
-
-# macOS
-.DS_Store
-
 *.tfvars
 *.tfvars.json
-.env
-.env.prod
+crash.log
+crash.*.log
+
+# ----------------------------
+# Editors & OS
+# ----------------------------
+.vscode/
+.DS_Store
