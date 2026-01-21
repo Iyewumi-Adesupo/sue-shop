@@ -17,38 +17,6 @@ High-Level Architecture
 	•	CI/CD Ready: GitHub Actions compatible (no local profiles hardcoded)
 
 ⸻
-
-Repository Structure
-
-**code**
-
-sue-shop/
-├── .github/                  # GitHub Actions workflows
-├── ansible/                  # Ansible playbooks & roles
-│   ├── playbooks/
-│   └── roles/
-├── backend/                  # Django backend application
-├── frontend/                 # React frontend application
-├── infrastructure/
-│   └── terraform/
-│       ├── backend.tf        # Remote state backend configuration
-│       ├── backend-config.tf # Backend variables
-│       ├── provider.tf       # AWS provider configuration
-│       ├── main.tf           # Root module wiring
-│       ├── variables.tf      # Root variables
-│       ├── outputs.tf        # Root outputs
-│       ├── terraform.tfvars  # Environment values (not committed)
-│       └── modules/
-│           ├── networking/   # VPC, subnets, routes, ALB, Route53, ACM
-│           ├── security/     # IAM, SGs, WAF, Secrets Manager
-│           ├── compute/      # Launch Template, Auto Scaling Group
-│           ├── database/     # RDS PostgreSQL (private subnets)
-│           └── storage/      # S3, CloudFront, lifecycle, logging
-├── docker-compose.yml        # Local development stack
-├── docker-compose.prod.yml   # Production container layout
-├── Makefile                  # Common automation commands
-└── README.md
-
 Infrastructure Design (Terraform)
 
 Networking Module
