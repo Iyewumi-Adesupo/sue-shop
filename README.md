@@ -53,7 +53,6 @@ Storage Module
 	•	WAF attached at CloudFront edge
 
 Configuration Management (Ansible)
-
 Ansible is used after infrastructure provisioning to configure instances created by the Auto Scaling Group.
 
 Responsibilities:
