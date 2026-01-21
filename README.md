@@ -19,6 +19,7 @@ High-Level Architecture
 ⸻
 
 Repository Structure
+
 **code**
 
 sue-shop/
