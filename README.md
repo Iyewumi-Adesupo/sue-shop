@@ -1,10 +1,9 @@
 
-Sue-Shop – Cloud-Native E-commerce Platform
+** Sue-Shop (A Cloud-Native E-commerce Platform) **
 
 Sue-Shop is a full-stack e-commerce platform designed to demonstrate production-grade cloud infrastructure, DevOps automation, and secure-by-design architecture.
 The project combines Django + React, Docker, Terraform, Ansible, and AWS to model a real-world, scalable system.
 
-⸻
 
 High-Level Architecture
 	•	Frontend: React (containerised)
@@ -15,8 +14,7 @@ High-Level Architecture
 	•	Security: IAM roles, Security Groups, Secrets Manager, WAF
 	•	State Management: Remote Terraform state (S3 backend)
 	•	CI/CD Ready: GitHub Actions compatible (no local profiles hardcoded)
-
-⸻
+	
 Infrastructure Design (Terraform)
 
 Networking Module
@@ -54,8 +52,6 @@ Storage Module
 	•	CloudFront distribution
 	•	WAF attached at CloudFront edge
 
-⸻
-
 Configuration Management (Ansible)
 
 Ansible is used after infrastructure provisioning to configure instances created by the Auto Scaling Group.
@@ -72,7 +68,6 @@ Ansible is kept separate from Terraform to maintain clean separation of concerns
 	•	Terraform → infrastructure
 	•	Ansible → system configuration
 
-⸻
 
 State Management & Security
 	•	Terraform state stored remotely in S3
@@ -81,7 +76,6 @@ State Management & Security
 	•	AWS credentials injected via CI/CD (OIDC ready)
 	•	No hardcoded secrets in codebase
 
-⸻
 
 Deployment Workflow (Planned / Supported)
 	1.	Terraform Apply
@@ -93,9 +87,6 @@ Deployment Workflow (Planned / Supported)
 	•	Pushes to registry
 	•	Triggers rolling updates via ASG
 
-⸻
-
-Why This Architecture?
 
 This project demonstrates:
 	•	Infrastructure as Code (IaC)
