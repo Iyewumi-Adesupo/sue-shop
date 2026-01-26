@@ -1,0 +1,11 @@
+__pycache__
+*.pyc
+.env
+.env.*
+.git
+.gitignore
+.terraform
+terraform
+node_modules
+tests
+README.md

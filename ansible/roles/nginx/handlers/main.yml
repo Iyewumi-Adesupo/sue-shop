@@ -1,0 +1,5 @@
+---
+- name: Restart nginx
+  systemd:
+    name: nginx
+    state: restarted. #Nginx restarts only when config changes

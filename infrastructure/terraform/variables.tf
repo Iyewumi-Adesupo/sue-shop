@@ -1,44 +1,114 @@
-variable "environment" {}
+# ----------------------------
+# Global
+# ----------------------------
+variable "environment" {
+  type = string
+}
 
-variable "public_subnet_ids" {}
+variable "region" {
+  type = string
+}
 
-variable "private_subnet_ids" {}
+# ----------------------------
+# DNS
+# ----------------------------
+variable "domain_name" {
+  type = string
+}
 
-variable "vpc_id" {}
+variable "hosted_zone_id" {
+  type = string
+}
 
-variable "domain_name" {}
+# ----------------------------
+# Networking
+# ----------------------------
+variable "sueshop_vpc" {
+  type = string
+}
 
-variable "hosted_zone_id" {}
+variable "vpc_cidr" {
+  type = string
+}
 
-variable "db_name" {}
+variable "public_azs" {
+  type = list(string)
+}
 
-variable "db_username" {}
+variable "private_azs" {
+  type = list(string)
+}
 
-variable "db_password" {}
+variable "public_subnet_cidrs" {
+  type = list(string)
+}
 
-variable "ami_id" {}
+variable "private_subnet_cidrs" {
+  type = list(string)
+}
 
-variable "instance_type" {}
+variable "sueshop_igw" {
+  type = string
+}
 
-variable "vpc_cidr" {}
+variable "sueshop_ngw" {
+  type = string
+}
 
-variable "AZ1" {}
-variable "AZ2" {}
+variable "sueshop_public_rt" {
+  type = string
+}
 
-variable "sueshop_public_subnet_1" {}
-variable "sueshop_public_subnet_2" {}
+variable "sueshop_private_rt" {
+  type = string
+}
 
-variable "sueshop_private_subnet_1" {}
-variable "sueshop_private_subnet_2" {}
+# ----------------------------
+# Compute
+# ----------------------------
+variable "ami_id" {
+  type = string
+}
 
-variable "private_subnet_1_cidr" {}
-variable "private_subnet_2_cidr" {}
+variable "instance_type" {
+  type = string
+}
 
-variable "public_subnet_1_cidr" {}
-variable "public_subnet_2_cidr" {}
+# ----------------------------
+# Database
+# ----------------------------
+variable "db_name" {
+  type = string
+}
 
-variable "sueshop_igw" {}
-variable "sueshop_ngw" {}
+variable "db_username" {
+  type = string
+}
 
-variable "sueshop_public_rt" {}
-variable "sueshop_private_rt" {}
+variable "instance_class" {
+  type = string
+}
+
+variable "allocated_storage" {
+  type = number
+}
+
+variable "max_allocated_storage" {
+  type = number
+}
+
+variable "multi_az" {
+  type = bool
+}
+
+variable "backup_retention_days" {
+  type = number
+}
+
+variable "skip_final_snapshot" {
+  type = bool
+}
+
+variable "deletion_protection" {
+  type = bool
+}

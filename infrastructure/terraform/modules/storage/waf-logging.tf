@@ -63,12 +63,3 @@ resource "aws_kinesis_firehose_delivery_stream" "waf_logs" {
     compression_format = "GZIP"
   }
 }
-
-resource "aws_wafv2_web_acl_logging_configuration" "this" {
-  provider = aws.us_east_1
-
-  resource_arn = aws_wafv2_web_acl.cloudfront.arn
-  log_destination_configs = [
-    aws_kinesis_firehose_delivery_stream.waf_logs.arn
-  ]
-}

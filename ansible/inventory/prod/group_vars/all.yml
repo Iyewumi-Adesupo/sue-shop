@@ -12,7 +12,7 @@ docker_packages:
 
 # App
 backend_port: 8000
-frontend_port: 3000
+frontend_port: 5173
 
 # Nginx
 nginx_listen_port: 80

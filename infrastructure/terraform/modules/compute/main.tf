@@ -1,5 +1,5 @@
 # Creating Launch template for webserver
-resource "aws_launch_template" "sueshop-lt" {
+resource "aws_launch_template" "sueshop_lt" {
   name_prefix   = "sueshop-web"
   image_id      = var.ami_id
   instance_type = var.instance_type
@@ -8,7 +8,7 @@ resource "aws_launch_template" "sueshop-lt" {
     name = var.iam_instance_profile_name
   }
 
-  vpc_security_group_ids = var.security_group_ids
+  vpc_security_group_ids = [aws_security_group.ec2_sg.id]
 
   user_data = base64encode(file("${path.module}/user_data.sh"))
 
@@ -23,7 +23,7 @@ resource "aws_launch_template" "sueshop-lt" {
 }
 
 # Creating ASG for instance
-resource "aws_autoscaling_group" "sueshop-asg" {
+resource "aws_autoscaling_group" "sueshop_asg" {
   name             = "sue-shop-asg"
   min_size         = 1
   max_size         = 3
@@ -33,7 +33,7 @@ resource "aws_autoscaling_group" "sueshop-asg" {
   target_group_arns   = var.target_group_arns
 
   launch_template {
-    id      = aws_launch_template.sueshop-lt.id
+    id      = aws_launch_template.sueshop_lt.id
     version = "$Latest"
   }
 
@@ -44,5 +44,30 @@ resource "aws_autoscaling_group" "sueshop-asg" {
     key                 = "Name"
     value               = "sueshop-asg"
     propagate_at_launch = true
+  }
+}
+
+resource "aws_security_group" "ec2_sg" {
+  name        = "sueshop-ec2-sg"
+  description = "Security group for SueShop EC2 instances"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description     = "Allow HTTP from ALB"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [var.alb_security_group_id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "sueshop-ec2-sg"
   }
 }

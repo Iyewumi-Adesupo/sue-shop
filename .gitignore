@@ -19,6 +19,13 @@ media/
 staticfiles/
 db.sqlite3
 
+# Secrets
+**/.env
+**/*.pem
+**/*.key
+**/id_rsa*
+**/secrets.yml
+
 # ----------------------------
 # Environment variables
 # ----------------------------
@@ -55,8 +62,14 @@ terraform.tfvars
 crash.log
 crash.*.log
 
+# Ansible
+ansible/*.retry
+ansible/inventory/*.cache
+ansible/inventory/*.json
+
 # ----------------------------
 # Editors & OS
 # ----------------------------
 .vscode/
 .DS_Store
+.idea/

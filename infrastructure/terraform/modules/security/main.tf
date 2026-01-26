@@ -37,14 +37,14 @@ resource "aws_iam_role" "ec2_role" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "ssm" {
+resource "aws_iam_role_policy_attachment" "ssm_core" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-resource "aws_iam_role_policy_attachment" "secrets" {
+resource "aws_iam_role_policy_attachment" "secrets_read" {
   role       = aws_iam_role.ec2_role.name
-  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadOnly"
 }
 
 resource "aws_iam_role_policy_attachment" "cloudwatch" {
@@ -57,10 +57,9 @@ resource "aws_iam_instance_profile" "ec2_profile" {
   role = aws_iam_role.ec2_role.name
 }
 
-
 # Secrets Manager (DB Credentials)
 resource "aws_secretsmanager_secret" "db_secret" {
-  name = "sueshop-db-credentials"
+  name = "sueshop/db/credentials"
 }
 
 resource "random_password" "db_password" {
@@ -75,6 +74,6 @@ resource "aws_secretsmanager_secret_version" "db_secret_value" {
   secret_string = jsonencode({
     db_username = var.db_username
     db_password = random_password.db_password.result
-    database   = var.db_name
+    database    = var.db_name
   })
 }

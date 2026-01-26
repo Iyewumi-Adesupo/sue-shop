@@ -31,6 +31,6 @@ resource "aws_iam_policy" "restricted_ssm_access" {
 }
 
 resource "aws_iam_role_policy_attachment" "attach_restricted_ssm" {
-  role       = aws_iam_role.devops_role.name
+  role       = aws_iam_role.ec2_role.name
   policy_arn = aws_iam_policy.restricted_ssm_access.arn
 }

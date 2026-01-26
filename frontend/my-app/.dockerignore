@@ -1,9 +1,36 @@
-.venv
-node_modules
+# Git
 .git
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env*
+.venv
+
+# Node / frontend
+node_modules/
+dist/
+build/
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Terraform / Ansible (VERY important)
+terraform/
+ansible/
+
+# Tests & docs
+tests/
+docs/
+README.md
+# System files
 *.log
 .DS_Store
 npm-debug.log
 .env
 dist
-.env*
+README.md

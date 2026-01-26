@@ -1,5 +1,5 @@
 resource "aws_s3_bucket_policy" "cloudfront_only" {
-  bucket = aws_s3_bucket.sueshop.id
+  bucket = aws_s3_bucket.sueshop_s3_bkt.id
 
   policy = jsonencode({
     Version = "2012-10-17"

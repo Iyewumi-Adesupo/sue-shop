@@ -1,0 +1,8 @@
+# Nginx defaults
+nginx_listen_port: 80
+nginx_server_name: sue-shop.uk  # Catch-all, ALB handles hostname
+
+# Internal app ports (Docker containers)
+frontend_port: 5173    # Vite
+backend_port: 8000     # Django
+frontend_root: /var/www/sueshop
