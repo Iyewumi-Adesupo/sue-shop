@@ -1,8 +1,10 @@
 # shop/tests/test_webhook_events.py
 import pytest
 from django.urls import reverse
+from django.test import override_settings
 
 @pytest.mark.django_db
+@override_settings(SECURE_SSL_REDIRECT=False)
 def test_checkout_session_completed(client, mocker):
     mock_event = {
         "type": "checkout.session.completed",
