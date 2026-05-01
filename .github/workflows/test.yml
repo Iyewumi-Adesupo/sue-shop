@@ -26,12 +26,18 @@ jobs:
           --health-retries=5
 
     env:
-      DATABASE_URL: postgres://susan:susan@localhost:5432/susan
       SECRET_KEY: dummy-secret
+      DEBUG: False
+
+      POSTGRES_DB: susan
+      POSTGRES_USER: susan
+      POSTGRES_PASSWORD: susan
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+
       STRIPE_SECRET_KEY: dummy
       STRIPE_PUBLISHABLE_KEY: dummy
       STRIPE_WEBHOOK_SECRET: dummy
-      DEBUG: False
 
     steps:
       - uses: actions/checkout@v4
