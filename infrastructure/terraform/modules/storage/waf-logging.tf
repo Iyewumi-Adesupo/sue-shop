@@ -1,5 +1,6 @@
 resource "aws_s3_bucket" "waf_logs" {
-  bucket = "${var.bucket_name}-waf-logs"
+  provider = aws.us_east_1
+  bucket   = "${var.bucket_name}-waf-logs"
 
   force_destroy = false
 
@@ -10,14 +11,18 @@ resource "aws_s3_bucket" "waf_logs" {
 }
 
 resource "aws_iam_role" "firehose_role" {
-  name = "sueshop-waf-firehose-role"
+  provider = aws.us_east_1
+  name     = "sueshop-waf-firehose-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
       Effect = "Allow"
       Principal = {
-        Service = "firehose.amazonaws.com"
+        Service = [
+          "firehose.amazonaws.com",
+          "waf.amazonaws.com"
+        ]
       }
       Action = "sts:AssumeRole"
     }]
@@ -25,7 +30,8 @@ resource "aws_iam_role" "firehose_role" {
 }
 
 resource "aws_iam_role_policy" "firehose_policy" {
-  role = aws_iam_role.firehose_role.id
+  provider = aws.us_east_1
+  role     = aws_iam_role.firehose_role.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -48,8 +54,9 @@ resource "aws_iam_role_policy" "firehose_policy" {
 }
 
 resource "aws_kinesis_firehose_delivery_stream" "waf_logs" {
-  name        = "sueshop-waf-logs"
+  name        = "aws-waf-logs-sueshop"
   destination = "extended_s3"
+  provider    = aws.us_east_1
 
   extended_s3_configuration {
     role_arn   = aws_iam_role.firehose_role.arn

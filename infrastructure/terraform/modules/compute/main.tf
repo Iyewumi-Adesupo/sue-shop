@@ -1,14 +1,17 @@
-# Creating Launch template for webserver
+# Launch Template for ASG instances
 resource "aws_launch_template" "sueshop_lt" {
   name_prefix   = "sueshop-web"
   image_id      = var.ami_id
   instance_type = var.instance_type
 
+  # SSH key for bastion → private instances
+  key_name = var.ssh_key_name
+
   iam_instance_profile {
     name = var.iam_instance_profile_name
   }
 
-  vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+  vpc_security_group_ids = [var.ec2_security_group_id]
 
   user_data = base64encode(file("${path.module}/user_data.sh"))
 
@@ -16,13 +19,13 @@ resource "aws_launch_template" "sueshop_lt" {
     resource_type = "instance"
     tags = {
       Name        = "sueshop-web"
+      Role        = "web"
       Environment = var.environment
-      SSMAccess   = "true"
     }
   }
 }
 
-# Creating ASG for instance
+# Auto Scaling Group (PRIVATE subnets)
 resource "aws_autoscaling_group" "sueshop_asg" {
   name             = "sue-shop-asg"
   min_size         = 1
@@ -41,33 +44,8 @@ resource "aws_autoscaling_group" "sueshop_asg" {
   health_check_grace_period = 300
 
   tag {
-    key                 = "Name"
-    value               = "sueshop-asg"
+    key                 = "Role"
+    value               = "web"
     propagate_at_launch = true
-  }
-}
-
-resource "aws_security_group" "ec2_sg" {
-  name        = "sueshop-ec2-sg"
-  description = "Security group for SueShop EC2 instances"
-  vpc_id      = var.vpc_id
-
-  ingress {
-    description     = "Allow HTTP from ALB"
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    security_groups = [var.alb_security_group_id]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "sueshop-ec2-sg"
   }
 }

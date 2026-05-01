@@ -1,0 +1,8 @@
+[local]
+localhost ansible_connection=local
+
+[role_web]
+sue-ec2
+
+[db]
+sue-db

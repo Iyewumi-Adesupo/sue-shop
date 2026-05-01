@@ -31,7 +31,7 @@ variable "db_secret_arn" {
 variable "engine_version" {
   description = "PostgreSQL engine version"
   type        = string
-  default     = "15.4"
+  default     = "15"
 }
 
 variable "instance_class" {

@@ -8,7 +8,7 @@ resource "aws_security_group" "rds_sg" {
     from_port       = 5432
     to_port         = 5432
     protocol        = "tcp"
-    security_groups = [var.ec2_security_group_id]
+    security_groups = [aws_security_group.ec2_sg.id]
   }
 
   egress {
@@ -37,14 +37,9 @@ resource "aws_iam_role" "ec2_role" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "ssm_core" {
-  role       = aws_iam_role.ec2_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-}
-
 resource "aws_iam_role_policy_attachment" "secrets_read" {
   role       = aws_iam_role.ec2_role.name
-  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadOnly"
+  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
 }
 
 resource "aws_iam_role_policy_attachment" "cloudwatch" {
@@ -76,4 +71,72 @@ resource "aws_secretsmanager_secret_version" "db_secret_value" {
     db_password = random_password.db_password.result
     database    = var.db_name
   })
+}
+
+# Creating Bastion Host SG
+resource "aws_security_group" "bastion_sg" {
+  name        = "sueshop-bastion-sg"
+  description = "Security group for SueShop Bastion host"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description      = "Allow SSH from admin IPv6 CIDR"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    ipv6_cidr_blocks = [var.admin_ipv6_cidr]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "sueshop-bastion-sg"
+  }
+}
+
+# Public-Keypair
+resource "aws_key_pair" "bastion" {
+  key_name   = "sueshop-bastion-key"
+  public_key = file("~/.ssh/sueshop-bastion.pub")
+}
+
+# Security Group for EC2 SG 
+resource "aws_security_group" "ec2_sg" {
+  name        = "sueshop-ec2-sg"
+  description = "EC2 Security group"
+  vpc_id      = var.vpc_id
+
+  # HTTP from ALB only
+  ingress {
+    description     = "Allow HTTP from ALB"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [var.alb_security_group_id]
+  }
+
+  # SSH ONLY from Bastion SG
+  ingress {
+    description     = "SSH from Bastion host"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion_sg.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "sueshop-ec2-sg"
+  }
 }

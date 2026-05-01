@@ -8,7 +8,3 @@ output "autoscaling_group_name" {
   value       = aws_autoscaling_group.sueshop_asg.name
 }
 
-output "ec2_security_group_id" {
-  description = "EC2 security group ID"
-  value       = aws_security_group.ec2_sg.id
-}

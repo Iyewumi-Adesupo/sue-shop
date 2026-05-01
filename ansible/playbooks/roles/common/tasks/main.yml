@@ -1,12 +1,16 @@
 ---
 - name: Set timezone
-  timezone:
+  community.general.timezone:
     name: "{{ timezone }}"
+  when: 
+    - ansible_os_family != 'Darwin'
+    - timezone is defined
 
 - name: Update apt cache
   apt:
     update_cache: yes
     cache_valid_time: 3600
+  when: ansible_os_family == 'Debian'
 
 - name: Install common packages
   apt:
@@ -17,3 +21,4 @@
       - lsb-release
       - unzip
     state: present
+  when: ansible_os_family == 'Debian'

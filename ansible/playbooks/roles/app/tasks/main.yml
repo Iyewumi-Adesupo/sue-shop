@@ -1,0 +1,36 @@
+---
+- block:
+
+    - name: Create app directory
+      file:
+        path: /opt/sue-shop
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Copy docker-compose file
+      copy:
+        src: ../../../../docker-compose.prod.yml
+        dest: /opt/sue-shop/docker-compose.yml
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Copy production environment file
+      copy:
+        src: ../../../../.env.prod
+        dest: /opt/sue-shop/.env.prod
+        owner: ubuntu
+        group: ubuntu
+        mode: '0600'
+        
+    - name: Pull latest images
+      command: docker compose pull
+      args:
+        chdir: /opt/sue-shop
+
+    - name: Start containers
+      command: docker compose up -d
+      args:
+        chdir: /opt/sue-shop
+
+  when: ansible_facts["os_family"] == "Debian"

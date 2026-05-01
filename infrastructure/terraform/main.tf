@@ -2,13 +2,17 @@ module "compute" {
   source = "./modules/compute"
 
   vpc_id                    = module.networking.vpc_id
+  bastion_sg_id             = module.security.bastion_sg_id
   private_subnet_ids        = module.networking.private_subnet_ids
   iam_instance_profile_name = module.security.ec2_instance_profile_name
   target_group_arns         = [module.networking.target_group_arn]
-  alb_security_group_id     = module.networking.alb_security_group_id
-  ami_id                    = var.ami_id
-  instance_type             = var.instance_type
-  environment               = var.environment
+  ec2_security_group_id     = module.security.ec2_security_group_id
+
+  ami_id          = var.ami_id
+  instance_type   = var.instance_type
+  environment     = var.environment
+  admin_ipv6_cidr = var.admin_ipv6_cidr
+  ssh_key_name    = aws_key_pair.bastion.key_name
 }
 
 module "networking" {
@@ -29,9 +33,25 @@ module "security" {
   source = "./modules/security"
 
   vpc_id                = module.networking.vpc_id
-  ec2_security_group_id = module.compute.ec2_security_group_id
+  alb_security_group_id = module.networking.alb_security_group_id
+  admin_ipv6_cidr       = var.admin_ipv6_cidr
   db_name               = var.db_name
   db_username           = var.db_username
+}
+
+resource "aws_key_pair" "bastion" {
+  key_name   = "sueshop-bastion-key"
+  public_key = file("~/.ssh/sueshop-bastion.pub")
+}
+
+module "bastion" {
+  source           = "./modules/bastion"
+  ami_id           = var.ami_id
+  instance_type    = "t3.micro"
+  public_subnet_id = module.networking.public_subnet_ids[0]
+  ssh_key_name     = aws_key_pair.bastion.key_name
+  bastion_sg_id    = module.security.bastion_sg_id
+  environment      = var.environment
 }
 
 module "database" {

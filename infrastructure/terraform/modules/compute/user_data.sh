@@ -1,27 +1,40 @@
 #!/bin/bash
 set -eux
 
-# Update system
+### --- System bootstrap ---
 apt-get update -y
 
-# Install Python & dependencies
-apt-get install -y python3 python3-pip curl unzip git
+# Core packages
+apt-get install -y \
+  python3 \
+  python3-pip \
+  curl \
+  unzip \
+  git \
+  ca-certificates \
+  gnupg \
+  lsb-release
 
-# Ensure SSM Agent is running
-systemctl enable amazon-ssm-agent
-systemctl start amazon-ssm-agent
+### --- SSH hardening basics ---
+# Ensure SSH is running (it is by default on Ubuntu, but explicit is safer)
+systemctl enable ssh
+systemctl start ssh
 
-# Install Ansible
-pip3 install ansible amazon.aws boto3 botocore
+# Disable root login (best practice)
+sed -i 's/^#PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
+systemctl reload ssh
 
-# Clone infrastructure repo (adjust repo URL)
-mkdir -p /opt/ansible
-cd /opt/ansible
-git clone https://github.com/Iyewumi-Adesupo/sue-shop.git .
+### --- Docker (if needed by your app) ---
+apt-get install -y docker.io docker-compose-plugin
+systemctl enable docker
+systemctl start docker
+usermod -aG docker ubuntu
 
-# Run Ansible locally using SSM-safe connection
-cd ansible
-ansible-playbook playbooks/site.yml
+### --- Optional: Python tooling for Ansible (REMOTE side only) ---
+# (Ansible itself runs from your laptop, not here)
+pip3 install --no-cache-dir \
+  boto3 \
+  botocore
 
-# Mark instance as configured
-touch /etc/ansible_bootstrap_complete
+### --- Marker file (useful for debugging / idempotency) ---
+touch /etc/ssh_bootstrap_complete
