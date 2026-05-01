@@ -17,13 +17,11 @@ def test_checkout_session_completed(client, mocker):
     mock_construct = mocker.patch("stripe.Webhook.construct_event", return_value=mock_event)
 
     response = client.post(
-        response = client.post(
-            "/api/webhook/stripe/",
-        follow=True,
-        data="{}",  # Dummy body
+        reverse("stripe-webhook"),
+        data="{}",
         content_type="application/json",
         HTTP_STRIPE_SIGNATURE="fake_signature"
-    )
+)
 
     assert response.status_code == 200
     mock_construct.assert_called_once()

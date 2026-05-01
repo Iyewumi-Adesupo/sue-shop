@@ -11,7 +11,7 @@ from .views import create_checkout_session
 from shop.views import ProductListAPIView, RegisterView, OrderViewSet
 
 router = DefaultRouter()
-router.register(r"orders", OrderViewSet, basename="order")
+router.register("orders", OrderViewSet, basename="order")
 
 urlpatterns = [
     # Stripe endpoints
