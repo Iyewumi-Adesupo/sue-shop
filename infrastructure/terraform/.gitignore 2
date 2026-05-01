@@ -1,0 +1,97 @@
+# ----------------------------
+<<<<<<< HEAD
+# Python
+# ----------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Virtual environments
+venv/
+*.venv
+.envrc
+
+# ----------------------------
+# Django
+# ----------------------------
+media/
+staticfiles/
+db.sqlite3
+
+# Secrets
+**/.env
+**/*.pem
+**/*.key
+**/id_rsa*
+**/secrets.yml
+
+# ----------------------------
+# Environment variables
+# ----------------------------
+.env
+.env.*
+!.env.example
+
+# ----------------------------
+# Node / React / Vite
+# ----------------------------
+node_modules/
+dist/
+.vite/
+
+# ----------------------------
+# Docker
+# ----------------------------
+*.log
+*.pid
+*.sock
+*.db
+*.tar
+
+# ----------------------------
+# Terraform
+# ----------------------------
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+*.tfvars
+*.tfvars.json
+crash.log
+crash.*.log
+
+# Ansible
+ansible/*.retry
+ansible/inventory/*.cache
+ansible/inventory/*.json
+
+# ----------------------------
+# Editors & OS
+# ----------------------------
+.vscode/
+.DS_Store
+.idea/
+=======
+# Terraform
+# ----------------------------
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Terraform working directory
+.terraform/
+.terraform.lock.hcl
+
+# Terraform variable files
+terraform.tfvars
+*.tfvars
+*.tfvars.json
+
+# Terraform crash logs
+crash.log
+crash.*.log
+>>>>>>> 929ce8a (bastion host added as a source of entry)

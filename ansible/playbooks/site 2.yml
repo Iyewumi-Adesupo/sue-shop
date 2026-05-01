@@ -1,0 +1,16 @@
+- name: Configure Sue-Shop servers
+  hosts: role_web
+  become: yes
+  gather_facts: true
+  roles:
+    - common
+    - docker
+    - app
+
+- name: Configure Database Servers
+  hosts: db
+  become: yes
+  gather_facts: true
+  roles:
+    - common
+    - postgresql
